@@ -12,7 +12,7 @@ const char* ssid = "NeFas";
 const char* password = "";
 const char* hostName = "p1meter";
 
-const unsigned long publishInterval = 30000UL; // Publish every 5 seconds
+const unsigned long publishInterval = 20000UL; // Publish every 20 seconds
 
 const char* mqtt_server = "192.168.178.35";
 
@@ -260,16 +260,17 @@ void loop() {
       //client.subscribe(mqttTopic);
       Serial.println("==============================================");
       data.applyEach(Printer());
+      reader.clear();
     } else {
       // Parser error, print error
       Serial.println(err);
       client.publish(mqttDebugTopic, (const char*) err.c_str(), false);
       //client.subscribe(mqttTopic); 
+      reader.clear();
+      
+      // Enable reader again until we get a valid reading
+      reader.enable(true);
     }
-
-    yield();
-
-    reader.clear();
   }
 
   client.loop();
